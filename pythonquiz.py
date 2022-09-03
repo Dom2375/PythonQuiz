@@ -1,7 +1,9 @@
 #pythonquiz.py
 from ntpath import join
 from string import ascii_lowercase
+import random
 
+NUM_QUESTIONS_PER_QUIZ = 5
 QUESTIONS = {
     "How do you iterate over both indices and elements in an iterable": [
         "enumerate(iterable)",
@@ -17,12 +19,17 @@ QUESTIONS = {
     ],
 }
 
+num_questions = min(NUM_QUESTIONS_PER_QUIZ, len(QUESTIONS))
+questions = random.sample(list(QUESTIONS.items()), k=num_questions)
+
 num_correct = 0
-for num, (question, alternatives) in enumerate(QUESTIONS.items(), start=1):
+for num, (question, alternatives) in enumerate(questions, start=1):
     print(f"\nQuestion {num}:")
     print(f"{question}?")
     correct_answer = alternatives[0]
-    labeled_alternatives = dict(zip(ascii_lowercase, sorted(alternatives)))
+    labeled_alternatives = dict(
+        zip(ascii_lowercase, random.sample(alternatives, k=len(alternatives)))
+    )
     for label, alternative in labeled_alternatives.items():
         print(f"  {label}) {alternative}")
 
@@ -34,7 +41,7 @@ for num, (question, alternatives) in enumerate(QUESTIONS.items(), start=1):
         num_correct += 1
         print("⭐ Correct! ⭐")
     else:
-        print(f"The answer is {correct_answer!r}, not {answer!r}") 
+        print(f"The answer is {correct_answer!r}, not {answer!r}")
 
 print(f"\nYou got {num_correct} correct out of {num} questions")
         
