@@ -1,10 +1,20 @@
-#pythonquiz.py
-from ntpath import join
-from string import ascii_lowercase
 import random
+from string import ascii_lowercase
 
 NUM_QUESTIONS_PER_QUIZ = 5
 QUESTIONS = {
+    "What's one effect of calling random.seed(42)": [
+        "The random numbers are reproducible.",
+        "The random numbers are more random.",
+        "The computer clock is reset.",
+        "The first random number is always 42.",
+    ],
+    "When does __name__ == '__main__' equal True in a Python file": [
+        "When the file is run as a script",
+        "When the file is imported as a module",
+        "When the file has a valid name",
+        "When the file only has one function",
+    ],
     "How do you iterate over both indices and elements in an iterable": [
         "enumerate(iterable)",
         "enumerate(iterable, start=1)",
@@ -16,34 +26,48 @@ QUESTIONS = {
         "Named expression",
         "Walrus operator",
         "Colon equals operator",
-    ],
+    ]
 }
 
-num_questions = min(NUM_QUESTIONS_PER_QUIZ, len(QUESTIONS))
-questions = random.sample(list(QUESTIONS.items()), k=num_questions)
+def prepare_questions(questions, num_questions):
+    num_questions = min(num_questions, len(questions))
+    return random.sample(list(questions.items()), k=num_questions)
 
-num_correct = 0
-for num, (question, alternatives) in enumerate(questions, start=1):
-    print(f"\nQuestion {num}:")
+def get_answer(question, alternatives):
     print(f"{question}?")
-    correct_answer = alternatives[0]
-    labeled_alternatives = dict(
-        zip(ascii_lowercase, random.sample(alternatives, k=len(alternatives)))
-    )
+    labeled_alternatives = dict(zip(ascii_lowercase, alternatives))
     for label, alternative in labeled_alternatives.items():
         print(f"  {label}) {alternative}")
 
     while (answer_label := input("\nChoice? ")) not in labeled_alternatives:
         print(f"Please answer one of {', '.join(labeled_alternatives)}")
 
-    answer = labeled_alternatives[answer_label]
+    return labeled_alternatives[answer_label]
+
+def ask_question(question, alternatives):
+    correct_answer = alternatives[0]
+    ordered_alternatives = random.sample(alternatives, k=len(alternatives))
+
+    answer = get_answer(question, ordered_alternatives)
     if answer == correct_answer:
-        num_correct += 1
         print("⭐ Correct! ⭐")
+        return 1
     else:
         print(f"The answer is {correct_answer!r}, not {answer!r}")
+        return 0 
 
-print(f"\nYou got {num_correct} correct out of {num} questions")
-        
+def run_quiz():
+    questions = prepare_questions(
+        QUESTIONS, num_questions=NUM_QUESTIONS_PER_QUIZ
+    )
 
-input("Press Enter to exit...")
+    num_correct = 0
+    for num, (question, alternatives) in enumerate(questions, start=1):
+        print(f"\nQuestion {num}:")
+        num_correct += ask_question(question, alternatives)
+
+    print(f"\nYou got {num_correct} correct out of {num} questions")
+    input("Press Enter to exit...")
+
+if __name__ == "__main__":
+    run_quiz()                   
