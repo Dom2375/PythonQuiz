@@ -1,12 +1,6 @@
 #pythonquiz.py
 
 QUESTIONS = {
-    "When was the first known use of the word 'quiz'": [
-        "1781", "1771", "1871", "1881"
-    ],
-    "Which built-in function can get information from the user": [
-        "input", "get", "print", "write"
-    ],
     "Which keyword do you use to loop over a given list of elements": [
         "for", "while", "each", "loop"
     ],
@@ -15,6 +9,9 @@ QUESTIONS = {
         "To combine several strings into one",
         "To compress several files into one archive",
         "To get information from the user",
+    ],
+    "What's the name of Python's sorting algorithm": [
+        "Timsort", "Quicksort", "Merge sort", "Bubble sort"
     ],
 }
 
@@ -26,6 +23,7 @@ for question, alternatives in QUESTIONS.items():
 
     answer_label = int(input(f"{question}? "))
     answer = sorted_alternatives[answer_label]
+
 
     if answer == correct_answer:
         print("Correct!")
